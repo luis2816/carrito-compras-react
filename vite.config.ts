@@ -11,6 +11,7 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',  
     port: 10000,  
-    strictPort: true
+    strictPort: true,
+    allowedHosts: ['carrito-compras-react.onrender.com']  // Agregar el dominio de Render
   }
 });
