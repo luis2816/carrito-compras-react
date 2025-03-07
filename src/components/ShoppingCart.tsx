@@ -1,32 +1,58 @@
-import React, { useState } from "react";
-import { Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Typography, Spin, Alert } from "antd";
 import CartButton from "./cart/CartButton";
 import CartDrawer from "./cart/CartDrawer";
 import ProductList from "./products/ProductList";
+import getProductos from "../services/Product";
 
 interface Product {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    quantity: number; // 🔥 Asegurar que siempre sea un número
-  }
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
-  const products: Product[] = [
-    { id: 1, name: "Producto 1", price: 100, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 2, name: "Producto 2", price: 150, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 3, name: "Producto 3", price: 200, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 4, name: "Producto 4", price: 250, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 5, name: "Producto 5", price: 300, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 6, name: "Producto 6", price: 350, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 7, name: "Producto 7", price: 400, image: "https://via.placeholder.com/100", quantity: 0 },
-    { id: 8, name: "Producto 8", price: 450, image: "https://via.placeholder.com/100", quantity: 0 },
-  ];
-  
 const ShoppingCart: React.FC = () => {
   const [cart, setCart] = useState<Product[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // 🔥 Cargar productos desde la API al montar el componente
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProductos();
+
+        if (response?.data && Array.isArray(response.data)) {
+          console.log("Respuesta exitosa:", response);
+          
+          const transformedProducts: Product[] = response.data.map((product: any) => ({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image || "", // Asegurar que siempre tenga un string
+            quantity: 0,
+          }));
+
+          setProducts(transformedProducts);
+        } else {
+          console.warn("La respuesta no contiene productos válidos:", response);
+          setError("No se encontraron productos.");
+        }
+      } catch (err: any) {
+        console.error("Error al cargar productos:", err);
+        setError(err.message || "Error al cargar productos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // 🛒 Agregar al carrito
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
@@ -35,18 +61,19 @@ const ShoppingCart: React.FC = () => {
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }]; // 🔹 Garantiza que siempre tenga cantidad
+      return [...prevCart, { ...product, quantity: 1 }];
     });
   };
 
+  // 🔄 Actualizar cantidad en el carrito
   const updateQuantity = (productId: number, amount: number) => {
-    setCart((prevCart) => {
-      return prevCart
+    setCart((prevCart) =>
+      prevCart
         .map((item) =>
           item.id === productId ? { ...item, quantity: item.quantity + amount } : item
         )
-        .filter((item) => item.quantity > 0); // Elimina el producto si la cantidad llega a 0
-    });
+        .filter((item) => item.quantity > 0)
+    );
   };
 
   return (
@@ -72,7 +99,13 @@ const ShoppingCart: React.FC = () => {
           margin: "0 auto",
         }}
       >
-        <ProductList products={products} onAddToCart={addToCart} />
+        {loading ? (
+          <Spin size="large" style={{ display: "block", textAlign: "center", margin: "20px 0" }} />
+        ) : error ? (
+          <Alert message={error} type="error" showIcon />
+        ) : (
+          <ProductList products={products} onAddToCart={addToCart} />
+        )}
       </div>
 
       {/* 🛍️ Drawer del carrito */}

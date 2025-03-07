@@ -6,7 +6,6 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  image: string;
   quantity: number; // Asegurar que siempre sea un número
 }
 
