@@ -7,7 +7,7 @@ interface Product {
   name: string;
   price: number;
   image: string;
-  quantity: number; // Asegurar que siempre sea un número
+  quantity: number;
 }
 
 interface ProductCardProps {
@@ -21,12 +21,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
     <Card
       hoverable
-      style={{ width: 500, borderRadius: 12, border: "2px solid #42A5F5", position: "relative" }}
-      cover={<img src={imageUrl} alt={product.name} style={{ padding: "10px", height: "200px", width: '90%', borderRadius:'20px'}} />}
+      className="product-card" // Se aplica la clase CSS
+      cover={
+        <img
+          src={imageUrl}
+          alt={product.name}
+          style={{
+            padding: "10px",
+            height: "200px",
+            width: "90%",
+            borderRadius: "20px",
+          }}
+        />
+      }
     >
-      <Card.Meta 
-        title={<span style={{ color: "#f47170", fontSize: "14px", fontWeight: "bold" }}>{product.name}</span>} 
-        description={<span style={{ fontSize: "16px", fontWeight: "bold" }}>${product.price.toFixed(2)}</span>}
+      <Card.Meta
+        title={
+          <span style={{ color: "#f47170", fontSize: "14px", fontWeight: "bold" }}>
+            {product.name}
+          </span>
+        }
+        description={
+          <span style={{ fontSize: "16px", fontWeight: "bold" }}>
+            ${product.price.toFixed(2)}
+          </span>
+        }
       />
 
       {/* Botón en la esquina inferior derecha */}
@@ -35,14 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         shape="circle"
         size="large"
         icon={<PlusOutlined />}
-        style={{
-          backgroundColor: "#F47170",
-          border: "none",
-          position: "absolute",
-          bottom: "10px",
-          right: "10px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-        }}
+        className="add-to-cart-button"
         onClick={() => onAddToCart(product)}
       />
     </Card>

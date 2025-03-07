@@ -1,0 +1,22 @@
+.product-card {
+    width: 500px;
+    border-radius: 12px;
+    border: 2px solid transparent; /* Borde transparente por defecto */
+    position: relative;
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .product-card:hover {
+    border: 2px solid #42A5F5; /* Borde azul al hacer hover */
+    box-shadow: 0 4px 10px rgba(66, 165, 245, 0.3); /* Efecto de sombra */
+  }
+  
+  .add-to-cart-button {
+    background-color: #F47170;
+    border: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
