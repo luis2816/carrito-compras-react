@@ -6,7 +6,7 @@ import ProductList from "./products/ProductList";
 import BestCombination from "./products/BestCombination";
 import { getProducts } from "../services/productsApi";
 import { addToCart, getCartProducts } from "../services/cardApi";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons"; 
+import { DeleteOutlined } from "@ant-design/icons"; 
 interface Product {
   id: number;
   name: string;
@@ -65,7 +65,7 @@ const ShoppingCart: React.FC = () => {
   // 🛒 Agregar producto al carrito
   const handleAddToCart = async (product: Product) => {
     try {
-      const result = await addToCart(product.id); // Usa el ID del producto
+      await addToCart(product.id); // Usa el ID del producto
       message.success(`🛒 ${product.name} agregado al carrito exitosamente`);
       fetchCart(); // Actualizar el carrito después de agregar un producto
     } catch (error: any) {
