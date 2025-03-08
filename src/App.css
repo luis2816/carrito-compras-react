@@ -7,8 +7,8 @@
   }
   
   .product-card:hover {
-    border: 2px solid #42A5F5; /* Borde azul al hacer hover */
-    box-shadow: 0 4px 10px rgba(66, 165, 245, 0.3); /* Efecto de sombra */
+    border: 2px solid #807B7B; /* Borde azul al hacer hover */
+    box-shadow: 0 4px 10px #807B7B; /* Efecto de sombra */
   }
   
   .add-to-cart-button {

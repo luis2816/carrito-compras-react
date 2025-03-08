@@ -1,42 +1,55 @@
 import React from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Alert } from "antd";
 import ProductCard from "./ProductCard";
 
+/** Representa un producto disponible en la lista. */
 interface Product {
   id: number;
   name: string;
   price: number;
-  quantity: number; // Asegurar que siempre sea un número
+  quantity: number;
 }
 
+/** Propiedades del componente ProductList. */
 interface ProductListProps {
+  /** Lista de productos disponibles. */
   products: Product[];
-  onAddToCart: (product: Product) => void; // Debe coincidir con ShoppingCart
+
+  /**  Función para agregar un producto al carrito.*/
+  onAddToCart: (product: Product) => void;
 }
 
+/** ProductList - Componente que muestra una lista de productos en una cuadrícula.*/
 const ProductList: React.FC<ProductListProps> = ({ products, onAddToCart }) => {
   return (
-    <Row
-      gutter={[16, 16]} // Espaciado uniforme
-      justify="center"
-      align="top" // Asegura alineación uniforme
-      wrap // Permite que los productos se distribuyan correctamente
-      style={{ marginTop: 20, padding: "0 10px" }} // Espaciado general
-    >
-      {products.map((product) => (
-        <Col
-          key={product.id}
-          xs={24} // 1 tarjeta por fila en pantallas pequeñas
-          sm={12} // 2 tarjetas por fila en tablets
-          md={8}  // 3 tarjetas por fila en pantallas medianas
-          lg={6}  // 4 tarjetas por fila en pantallas grandes
-          xl={6}  // 5 tarjetas por fila en pantallas extra grandes
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          <ProductCard product={product} onAddToCart={onAddToCart} />
-        </Col>
-      ))}
-    </Row>
+    <div style={{ marginTop: 20, padding: "0 10px" }}>
+      {products.length === 0 ? (
+        // Muestra un mensaje si no hay productos disponibles
+        <Alert
+          message="No hay productos disponibles"
+          description="Por favor, revisa más tarde o contacta al administrador."
+          type="warning"
+          showIcon
+          style={{ textAlign: "center", marginBottom: 20 }}
+        />
+      ) : (
+        <Row gutter={[16, 16]} justify="center">
+          {products.map((product) => (
+            <Col
+              key={product.id}
+              xs={24}
+              sm={12}
+              md={8}
+              lg={6}
+              xl={6}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <ProductCard product={product} onAddToCart={onAddToCart} />
+            </Col>
+          ))}
+        </Row>
+      )}
+    </div>
   );
 };
 
